@@ -542,11 +542,12 @@ function getPreviewBarAttachElement(): HTMLElement | null {
         }
     ];
 
-    for (const option of progressElementOptions) {
-        const allElements = document.querySelectorAll(option.selector) as NodeListOf<HTMLElement>;
-        const el = option.isVisibleCheck ? findValidElement(allElements) : allElements[0];
+    const combinedSelector = progressElementOptions.map(option => option.selector).join(', ');
+    const allElements = document.querySelectorAll(combinedSelector) as NodeListOf<HTMLElement>;
 
-        if (el) {
+    for (const el of allElements) {
+        const option = progressElementOptions.find(option => el.matches(option.selector));
+        if (option && (!option.isVisibleCheck || findValidElement([el]))) {
             return el;
         }
     }
@@ -2101,8 +2102,10 @@ function openInfoMenu() {
         if (enhancerStyle) {
             const enhancerStyleVariables = document.getElementById("efyt-theme-variables");
             if (enhancerStyleVariables) {
-                const enhancerCss = await fetch(enhancerStyle.getAttribute("href")).then((response) => response.text());
-                const enhancerVariablesCss = await fetch(enhancerStyleVariables.getAttribute("href")).then((response) => response.text());
+                const [enhancerCss, enhancerVariablesCss] = await Promise.all([
+                    fetch(enhancerStyle.getAttribute("href")).then(response => response.text()),
+                    fetch(enhancerStyleVariables.getAttribute("href")).then(response => response.text())
+                ]);
 
                 if (enhancerCss && enhancerVariablesCss) {
                     frame.contentWindow.postMessage({
@@ -2119,14 +2122,13 @@ function openInfoMenu() {
     frame.src = chrome.runtime.getURL("popup.html");
     popup.appendChild(frame);
 
-    const elemHasChild = (elements: NodeListOf<HTMLElement>): Element => {
-        let parentNode: Element;
+    const elemHasChild = (elements: NodeListOf<HTMLElement>): Element | null => {
         for (const node of elements) {
             if (node.firstElementChild !== null) {
-                parentNode = node;
+                return node;
             }
         }
-        return parentNode
+        return null;
     }
 
     const parentNodeOptions = [{

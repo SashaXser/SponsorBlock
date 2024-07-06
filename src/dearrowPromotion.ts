@@ -66,7 +66,7 @@ export async function tryShowingDeArrowPromotion() {
  * Two upper case words (at least 2 letters long)
  */
 function badTitle(title: string): boolean {
-    return !!title.match(/\p{Lu}{2,} \p{Lu}{2,}[.!? ]/u);
+    return !!/\p{Lu}{2,} \p{Lu}{2,}[.!? ]/u.exec(title);
 }
 
 export function hideDeArrowPromotion(): void {

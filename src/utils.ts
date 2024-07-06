@@ -275,7 +275,7 @@ export default class Utils {
     }
 
     isHex(num: string): boolean {
-        return Boolean(num.match(/^[0-9a-f]+$/i));
+        return /^[0-9a-f]+$/i.test(num);
     }
 
     async addHiddenSegment(videoID: VideoID, segmentUUID: string, hidden: SponsorHideType) {

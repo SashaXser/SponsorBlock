@@ -702,7 +702,7 @@ class PreviewBar {
             }
 
             // Then check for scale
-            const transformMatch = checkElement.style.transform.match(/scaleX\(([0-9.]+?)\)/);
+            const transformMatch = /scaleX\(([0-9.]+?)\)/.exec(checkElement.style.transform);
             if (transformMatch) {
                 const transformScale = parseFloat(transformMatch[1]);
                 const endPosition = transformScale + checkLeft / currentSectionWidthNoMargin;

@@ -48,7 +48,7 @@ class NoticeTextSelectionComponent extends React.Component<NoticeTextSelectionPr
         const elements: Array<string | React.ReactElement> = [];
         const textParts = text.split(/(?=\s+)/);
         for (const textPart of textParts) {
-            if (textPart.match(/^\s*http/)) {
+            if (/^\s*http/.exec(textPart)) {
                 elements.push(
                     <a href={textPart} target="_blank" rel="noreferrer">
                         {textPart}

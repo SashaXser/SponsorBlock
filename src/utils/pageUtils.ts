@@ -39,7 +39,7 @@ export function getHashParams(): Record<string, unknown> {
             const [key, value] = param.split('=');
             const decoded = decodeURIComponent(value);
             try {
-                acc[key] = decoded?.match(/{|\[/) ? JSON.parse(decoded) : value;
+                acc[key] = /({|\[})/.exec(decoded) ? JSON.parse(decoded) : value;
             } catch (e) {
                 console.error(`Failed to parse hash parameter ${key}: ${value}`);
             }
